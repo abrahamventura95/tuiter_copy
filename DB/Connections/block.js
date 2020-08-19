@@ -18,3 +18,13 @@ exports.delete = function (obj, callback){
 	});
 };
 
+exports.get = function (id, callback){
+	var sqlQuery = "SELECT block.id, user.username, user.email		\
+					FROM user, block								\
+					WHERE user.id = block.idUser 	AND				\
+						  block.idRef ='" + id +"'					\
+					ORDER BY block.created_at DESC";	
+	DBHelper.doQuery(sqlQuery, function(err, data){
+		callback(err, data);
+	});				
+}

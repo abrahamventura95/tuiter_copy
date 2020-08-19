@@ -64,3 +64,9 @@ exports.timelineLike = function(req, res){
 		res.json(data);
 	});
 }
+
+exports.getRT = function(req, res){
+	queries.getRT(req.param('id'), function(err, data){
+		res.json(data);
+	});
+}

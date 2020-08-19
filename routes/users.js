@@ -9,6 +9,7 @@ module.exports = function(app) {
 		.put(auth.check, controller.edit)
 		.delete(auth.check, controller.delete);
 	app.route('/user/block')
+		.get(auth.check, block.get)
 		.post(auth.check, block.create)
 		.delete(auth.check, block.delete);
 	app.route('/user/follow')
