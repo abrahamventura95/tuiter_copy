@@ -21,3 +21,9 @@ exports.delete = function(req, res){
 		res.json(data);
 	});
 }
+
+exports.get = function(req, res){
+	queries.get(req.param('id'), function(err, data){
+		res.json(data);
+	});
+}

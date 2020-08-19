@@ -17,3 +17,14 @@ exports.delete = function (obj, callback){
 		callback(err, data);
 	});
 };
+
+exports.get = function (id, callback){
+	var sqlQuery = "SELECT `like`.id, user.username, user.email		\
+					FROM user, `like`								\
+					WHERE user.id = `like`.idUser 	AND				\
+						  `like`.idTuit ='" + id +"'				\
+					ORDER BY `like`.created_at DESC";	
+	DBHelper.doQuery(sqlQuery, function(err, data){
+		callback(err, data);
+	});				
+}
