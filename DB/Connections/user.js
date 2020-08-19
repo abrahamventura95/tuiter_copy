@@ -118,16 +118,26 @@ exports.perfil = function (id, callback){
 				   FROM user 								\
 				   WHERE id ='" + id + "'";
 	var sqlTuits = "SELECT tuit.id, tuit.message, tuit.ref, tuit.type, 	\
-						   user.username, user.email					\
-					FROM user, tuit 									\
-					WHERE user.id = tuit.idUser AND 					\
-						  user.id ='" + id +"'";			   
+						   user.username, user.email,					\
+						   COUNT(`like`.id) as likes					\
+					FROM user, tuit, `like`, tuit as rt 				\
+					WHERE user.id = tuit.idUser 	AND 				\
+						  tuit.id = `like`.idTuit	AND					\
+						  user.id ='" + id +"'							\
+					GROUP BY tuit.id, tuit.message, tuit.ref, 			\
+							 tuit.type, user.username, user.email		\
+					ORDER BY tuit.created_at DESC";	
 	var sqlTuitsL = "SELECT tuit.id, tuit.message, tuit.ref, tuit.type, \
-						   user.username, user.email					\
-					FROM user, tuit, `like`								\
+						   user.username, user.email,					\
+						   COUNT(`like`.id) as likes					\
+					FROM user, tuit, `like`, `like` as liked			\
 					WHERE user.id = tuit.idUser 	AND					\
 						  tuit.id = `like`.idTuit 	AND					\
-						  user.id ='" + id +"'";			
+						  liked.idTuit = tuit.id 	AND					\
+						  user.id ='" + id +"'							\
+					GROUP BY tuit.id, tuit.message, tuit.ref, 			\
+							 tuit.type, user.username, user.email		\
+					ORDER BY tuit.created_at DESC";			   
 	var sqlFollows = "SELECT user.id, user.username, user.email 	\
 					  FROM user, follower							\
 					  WHERE user.id = follower.idRef	AND			\
