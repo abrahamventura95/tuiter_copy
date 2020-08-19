@@ -52,3 +52,15 @@ exports.delete = function(req, res){
 		res.json(data);
 	});
 }
+
+exports.timeline = function(req, res){
+	queries.timeline(req.user.sub, function(err, data){
+		res.json(data);
+	});
+}
+
+exports.timelineLike = function(req, res){
+	queries.timelineLike(req.user.sub, function(err, data){
+		res.json(data);
+	});
+}
