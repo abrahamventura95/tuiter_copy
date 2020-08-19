@@ -151,3 +151,9 @@ exports.delete = function(req, res){
 		res.json(data);
 	});
 }
+
+exports.perfil = function(req, res){
+	queries.perfil(req.body.idUser, function(err,data){
+		res.json(data);
+	});
+}

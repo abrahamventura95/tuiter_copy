@@ -21,7 +21,6 @@ function validate(body, callback) {
 	}
 };
 
-
 exports.create = function(req, res) {
 	validate(req.body, function(value){
 		try{

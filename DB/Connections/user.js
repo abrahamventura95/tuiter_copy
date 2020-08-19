@@ -111,3 +111,47 @@ exports.delete = function (id, callback){
 		callback(err, data);
 	});
 };
+
+
+exports.perfil = function (id, callback){
+	var sqlUser = "SELECT id, username, email, privacity	\
+				   FROM user 								\
+				   WHERE id ='" + id + "'";
+	var sqlTuits = "SELECT tuit.id, tuit.message, tuit.ref, tuit.type, 	\
+						   user.username, user.email					\
+					FROM user, tuit 									\
+					WHERE user.id = tuit.idUser AND 					\
+						  user.id ='" + id +"'";			   
+	var sqlTuitsL = "SELECT tuit.id, tuit.message, tuit.ref, tuit.type, \
+						   user.username, user.email					\
+					FROM user, tuit, `like`								\
+					WHERE user.id = tuit.idUser 	AND					\
+						  tuit.id = `like`.idTuit 	AND					\
+						  user.id ='" + id +"'";			
+	var sqlFollows = "SELECT user.id, user.username, user.email 	\
+					  FROM user, follower							\
+					  WHERE user.id = follower.idRef	AND			\
+						    user.id ='" + id +"'";		
+	var sqlFollowers = "SELECT user.id, user.username, user.email 	\
+					    FROM user, follower							\
+					    WHERE user.id = follower.idUser	AND			\
+						    user.id ='" + id +"'";						    			  		  
+	DBHelper.doQuery(sqlUser, function(err, user){
+		DBHelper.doQuery(sqlTuits, function(err, tuits){
+			DBHelper.doQuery(sqlTuitsL, function(err, likes){
+				DBHelper.doQuery(sqlFollows, function(err, follows){
+					DBHelper.doQuery(sqlFollowers, function(err, followers){
+						var data = {
+							user: 	user,
+							tuits: 	tuits,
+							likes: 	likes,
+							follows: follows,
+							followers: followers
+						}
+						callback(err, data);
+					});
+				});
+			});
+		});
+	});
+};

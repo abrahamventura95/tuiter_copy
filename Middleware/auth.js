@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken');
+const jwt 		= require('jsonwebtoken');
+var DBHelper 	= require('../DB/helper');
 
 exports.check = function(req, res, next){
     const authHeader = req.headers['authorization'];
@@ -12,4 +13,16 @@ exports.check = function(req, res, next){
         req.user = user;
         next();
     });
+}
+
+exports.block = function(req, res, next){
+	var sqlQuery = "SELECT COUNT(*)	as val						\
+					FROM block 									\
+					WHERE idUser='" + req.body.idUser + "' AND	\
+						  idRef ='" + req.user.sub + "'";
+	DBHelper.doQuery(sqlQuery, function(err, data){
+		if(data[0].val == 1) return res.sendStatus(process.env.UNAUTHORIZED);
+		next();
+	});					    
+
 }
